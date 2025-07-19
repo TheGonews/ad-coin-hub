@@ -19,6 +19,13 @@
     "StatusBar": {
       "style": "dark",
       "backgroundColor": "#1a1a2e"
-    }
+    },
+    "AdMob": {
+      "appId": "ca-app-pub-2949710768315460~7560875297",
+      "initializeForTesting": true
+    },
+    "ScreenOrientation": {},
+    "App": {},
+    "Device": {}
   }
 }

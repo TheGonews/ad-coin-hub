@@ -29,6 +29,14 @@ const Index = () => {
     setCurrentView("dashboard");
   };
 
+  const handleLockScreenAdViewed = () => {
+    setUserStats(prev => ({
+      coinBalance: prev.coinBalance + 1,
+      adsWatchedToday: prev.adsWatchedToday + 1,
+      totalEarnings: prev.totalEarnings + 1
+    }));
+  };
+
   if (!isAuthenticated) {
     return <AuthFlow onAuthComplete={handleAuthComplete} />;
   }
@@ -43,6 +51,7 @@ const Index = () => {
             dailyLimit={20}
             totalEarnings={userStats.totalEarnings}
             onWatchAd={() => setCurrentView("watch-ad")}
+            onLockScreenAdViewed={handleLockScreenAdViewed}
           />
         ) : (
           <RewardAnimation 

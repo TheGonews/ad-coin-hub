@@ -2,7 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CoinIcon } from "./CoinIcon";
+import { LockScreenAd } from "./LockScreenAd";
 import { Play, Eye, TrendingUp, Gift } from "lucide-react";
+import { useState } from "react";
 
 interface DashboardProps {
   coinBalance: number;
@@ -10,6 +12,7 @@ interface DashboardProps {
   dailyLimit: number;
   totalEarnings: number;
   onWatchAd?: () => void;
+  onLockScreenAdViewed?: () => void;
 }
 
 export const Dashboard = ({ 
@@ -17,9 +20,11 @@ export const Dashboard = ({
   adsWatchedToday = 8, 
   dailyLimit = 20,
   totalEarnings = 1250,
-  onWatchAd
+  onWatchAd,
+  onLockScreenAdViewed
 }: DashboardProps) => {
   const dailyProgress = (adsWatchedToday / dailyLimit) * 100;
+  const [lockScreenEnabled, setLockScreenEnabled] = useState(true);
   
   return (
     <div className="space-y-6">
@@ -99,11 +104,18 @@ export const Dashboard = ({
           variant="outline" 
           size="lg" 
           className="w-full border-primary/30 py-6"
+          onClick={() => setLockScreenEnabled(!lockScreenEnabled)}
         >
           <Eye className="w-5 h-5 mr-2" />
-          Enable Lockscreen Ads (+1 coin each)
+          {lockScreenEnabled ? 'Disable' : 'Enable'} Lockscreen Ads (+1 coin each)
         </Button>
       </div>
+
+      {/* Lockscreen Ad Component */}
+      <LockScreenAd 
+        onAdViewed={onLockScreenAdViewed || (() => {})}
+        isEnabled={lockScreenEnabled}
+      />
 
       {/* Quick Stats */}
       <Card className="bg-card-gradient border-primary/20 p-4">

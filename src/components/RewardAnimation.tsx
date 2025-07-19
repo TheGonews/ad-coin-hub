@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CoinIcon } from "./CoinIcon";
 import { Button } from "@/components/ui/button";
 import { Play, Check } from "lucide-react";
+import { useAdMob } from "@/hooks/useAdMob";
 
 interface RewardAnimationProps {
   coinsEarned: number;
@@ -12,21 +13,37 @@ export const RewardAnimation = ({ coinsEarned, onComplete }: RewardAnimationProp
   const [isWatching, setIsWatching] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showReward, setShowReward] = useState(false);
+  const { showRewardedAd, isInitialized } = useAdMob();
 
-  const handleWatchAd = () => {
+  const handleWatchAd = async () => {
     setIsWatching(true);
     
-    // Simulate ad watching
-    setTimeout(() => {
-      setIsWatching(false);
-      setIsCompleted(true);
-      setShowReward(true);
-      
-      // Show reward animation
+    try {
+      // Show real AdMob rewarded ad
+      await showRewardedAd((reward) => {
+        console.log('Reward received:', reward);
+        setIsWatching(false);
+        setIsCompleted(true);
+        setShowReward(true);
+        
+        // Show reward animation for 2 seconds, then complete
+        setTimeout(() => {
+          onComplete();
+        }, 2000);
+      });
+    } catch (error) {
+      console.error('Ad failed, showing simulation:', error);
+      // Fallback to simulation if ad fails
       setTimeout(() => {
-        onComplete();
-      }, 2000);
-    }, 3000);
+        setIsWatching(false);
+        setIsCompleted(true);
+        setShowReward(true);
+        
+        setTimeout(() => {
+          onComplete();
+        }, 2000);
+      }, 3000);
+    }
   };
 
   if (showReward) {
@@ -100,9 +117,10 @@ export const RewardAnimation = ({ coinsEarned, onComplete }: RewardAnimationProp
         onClick={handleWatchAd}
         size="lg" 
         className="w-full bg-reward-gradient hover:opacity-90 transition-opacity font-semibold py-6"
+        disabled={!isInitialized}
       >
         <Play className="w-5 h-5 mr-2" />
-        Start Watching Ad
+        {isInitialized ? 'Watch Real AdMob Ad' : 'Loading AdMob...'}
       </Button>
     </div>
   );
