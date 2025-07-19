@@ -1,0 +1,24 @@
+{
+  "appId": "app.lovable.cec0dc6f27384aac98e73e7662d28cff",
+  "appName": "AdRewardz",
+  "webDir": "dist",
+  "server": {
+    "url": "https://cec0dc6f-2738-4aac-98e7-3e7662d28cff.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#1a1a2e",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#1a1a2e"
+    }
+  }
+}
