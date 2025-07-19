@@ -1,11 +1,55 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Dashboard } from "@/components/Dashboard";
+import { AuthFlow } from "@/components/AuthFlow";
+import { RewardAnimation } from "@/components/RewardAnimation";
 
 const Index = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentView, setCurrentView] = useState<"dashboard" | "watch-ad">("dashboard");
+  const [userStats, setUserStats] = useState({
+    coinBalance: 125,
+    adsWatchedToday: 8,
+    totalEarnings: 1250
+  });
+
+  const handleAuthComplete = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleWatchAd = () => {
+    setCurrentView("watch-ad");
+  };
+
+  const handleAdComplete = () => {
+    setUserStats(prev => ({
+      coinBalance: prev.coinBalance + 5,
+      adsWatchedToday: prev.adsWatchedToday + 1,
+      totalEarnings: prev.totalEarnings + 5
+    }));
+    setCurrentView("dashboard");
+  };
+
+  if (!isAuthenticated) {
+    return <AuthFlow onAuthComplete={handleAuthComplete} />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-lg">
+        {currentView === "dashboard" ? (
+          <Dashboard 
+            coinBalance={userStats.coinBalance}
+            adsWatchedToday={userStats.adsWatchedToday}
+            dailyLimit={20}
+            totalEarnings={userStats.totalEarnings}
+            onWatchAd={() => setCurrentView("watch-ad")}
+          />
+        ) : (
+          <RewardAnimation 
+            coinsEarned={5}
+            onComplete={handleAdComplete}
+          />
+        )}
       </div>
     </div>
   );
